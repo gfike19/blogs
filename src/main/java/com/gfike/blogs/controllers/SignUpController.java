@@ -1,14 +1,12 @@
 package com.gfike.blogs.controllers;
 
 import com.gfike.blogs.daos.UserDao;
-import com.gfike.blogs.dtos.RegisterFormDTO;
 import com.gfike.blogs.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,35 +18,34 @@ public class SignUpController {
     UserDao userDao;
 
     @GetMapping
-    public String get(@ModelAttribute RegisterFormDTO registerFormDTO,
-                      Errors errors, HttpServletRequest request,
-                      Model model) {
+    public String get(Model model) {
+        model.addAttribute("title", "Sign Up");
+        return "signup";
+    }
 
-        if (errors.hasErrors()) {
-            model.addAttribute("title", "Register");
-            return "register";
+    @PostMapping
+    public String post(HttpServletRequest request, Model model){
+        String msg = "";
+        String uname = request.getParameter("username");
+        String pwd = request.getParameter("password");
+        String vpwd = request.getParameter("verify");
+
+        if(uname.isBlank() || pwd.isBlank() || vpwd.isBlank()) {
+            msg += "One or more fields are empty<br>";
         }
 
-        User existingUser = userDao.findByName(registerFormDTO.getUsername());
-
-        if (existingUser != null) {
-            errors.rejectValue("username", "username.alreadyexists", "A user with that username already exists");
-            model.addAttribute("title", "Register");
-            return "register";
+        if(!pwd.equals(vpwd)) {
+            msg += "Passwords do not match<br>";
         }
 
-        String password = registerFormDTO.getPassword();
-        String verifyPassword = registerFormDTO.getVerifyPassword();
-        if (!password.equals(verifyPassword)) {
-            errors.rejectValue("password", "passwords.mismatch", "Passwords do not match");
-            model.addAttribute("title", "Register");
-            return "register";
+        if(!msg.isEmpty()) {
+            model.addAttribute("msg", msg);
+            return "redirect:";
         }
 
-        User newUser = new User(registerFormDTO.getUsername(), registerFormDTO.getPassword());
-        userDao.save(newUser);
-//        setUserInSession(request.getSession(), newUser);
+        User u = new User(uname, pwd);
+        userDao.save(u);
 
-        return "redirect:";
+        return "redirect:/newBlog";
     }
 }

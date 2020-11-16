@@ -26,21 +26,35 @@ public class LogInController {
     @PostMapping
     public String post(HttpServletRequest request, Model model) {
         String msg = "";
-        String username = request.getParameter("username");
-        User u = new User();
+        String username = request.getParameter("uname");
+        String pwd = request.getParameter("pwd");
+        User u;
+        if(username.isEmpty() || pwd.isEmpty()) {
+            msg += "One or more fields are empty<br>";
+        }
+
+        if(!msg.isEmpty()) {
+            model.addAttribute("msg", msg);
+            return "redirect:";
+        }
+
         try {
             u = userDao.findByName(username);
         } catch(Exception e) {
             msg += "No username found. Please create an account<br>";
             model.addAttribute("msg", msg);
-            return "redirect:/login";
         }
         u = userDao.findByName(username);
-        String pwd = request.getParameter("pwd");
+
         if(!u.isMatchingPassword(pwd)) {
             msg += "Invalid password<br>";
+        }
+
+        if(!msg.isEmpty()) {
+            model.addAttribute("msg", msg);
             return "redirect:/login";
         }
-        return "newBlog";
+
+        return "redirect:/newBlog";
     }
 }

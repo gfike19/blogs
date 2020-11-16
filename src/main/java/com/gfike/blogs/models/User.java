@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
-public class User {
+public class User extends AbstractEntity {
 
     @Column(name="user_name")
     @NotNull

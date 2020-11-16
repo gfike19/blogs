@@ -22,10 +22,6 @@ public class AbstractEntity {
     public void autofill() {
         UUID uuid = UUID.randomUUID();
         this.id = (int)UUID.randomUUID().getMostSignificantBits();
-    }
-
-    @PrePersist
-    public void setDateCreated() {
         Date dt = new java.util.Date();
         SimpleDateFormat sdf =
                 new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
