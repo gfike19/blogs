@@ -7,10 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("newBlog")
@@ -20,7 +19,14 @@ public class BlogController {
     BlogDao blogDao;
 
     @GetMapping
-    public String get(Model model) {
+    public String get(Model model, HttpSession session) {
+        try {
+            if(session.getAttribute("userId") == null) {
+                session.setAttribute("msg", "You must be logged in to write a new post");
+                return "redirect:/login";
+            }
+        } catch (Exception e) {}
+
         model.addAttribute("title", "New Blog");
         model.addAttribute("blog", new Blog());
         return "newBlog";
