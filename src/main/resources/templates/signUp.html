@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="base :: head"></head>
+<body>
+    <nav th:replace="base :: nav"></nav>
+    <div class="page-header">
+        <h1>Sign Up</h1>
+    </div>
+    <form method="post">
+        <div class="form-group">
+            <label>Username
+                <input class="form-control" th:field="${registerFormDTO.username}" />
+            </label>
+        </div>
+        <div class="form-group">
+            <label>Password
+                <input class="form-control" th:field="${registerFormDTO.password}" type="password" />
+            </label>
+        </div>
+        <div class="form-group">
+            <label>Verify Password
+                <input class="form-control" th:field="${registerFormDTO.verifyPassword}" type="password" />
+            </label>
+        </div>
+
+        <input type="submit" class="btn btn-primary" value="Register" />
+    </form>
+</body>
+</html>

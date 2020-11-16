@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+    <head th:replace="base :: head"></head>
+    <body>
+        <nav th:replace="base :: nav"></nav>
+        <ul th:each="blog: ${allBlogs}">
+            <li>
+                <h2 th:text="${blog.title}"></h2>
+                <span th:text="${blog.dateCreated}"></span>
+                <p th:text="${blog.text}"></p>
+            </li>
+        </ul>
+    </body>
+<footer th:replace="base :: foot"></footer>
+</html>
